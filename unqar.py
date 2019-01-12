@@ -31,12 +31,17 @@ class BinaryReader:
         self.file.close()
 
 
-if len(sys.argv) < 2:
+def print_usage():
     print("Usage: %s <qar file> [<output path>]" % sys.argv[0])
+
+
+if len(sys.argv) < 2:
+    print_usage()
     exit(1)
 
 binaryReader = BinaryReader(sys.argv[1])
 output_path = pathlib.Path.cwd()
+
 if len(sys.argv) > 2:
     output_path = str(sys.argv[2])
 
@@ -44,7 +49,7 @@ try:
     magic = binaryReader.unpack('<H')  # 71 02
     if magic != 0x0271:
         print("Not a supported qar file.")
-        print("Usage: %s <qar file>" % sys.argv[0])
+        print_usage()
         exit(2)
     file_count = binaryReader.unpack('<H')
     print("Going to extract %d files." % file_count)
