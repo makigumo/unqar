@@ -36,7 +36,7 @@ if len(sys.argv) < 2:
     exit(1)
 
 binaryReader = BinaryReader(sys.argv[1])
-output_path = ""
+output_path = pathlib.Path.cwd()
 if len(sys.argv) > 2:
     output_path = str(sys.argv[2])
 
