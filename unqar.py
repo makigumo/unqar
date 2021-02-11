@@ -32,17 +32,36 @@ class BinaryReader:
 
 
 def print_usage():
-    print("Usage: %s <qar file> [<output path>]" % sys.argv[0])
+    print("Usage: %s [-l] <qar file> [<output path>]" % sys.argv[0])
+    print("-l     list files in qar file")
 
 
 if len(sys.argv) < 2:
     print_usage()
     exit(1)
 
-binaryReader = BinaryReader(sys.argv[1])
+listFiles = False
+
+if (sys.argv[1]) == '-l':
+    if len(sys.argv) < 3:
+        print_usage()
+        exit(1)
+    else:
+        listFiles = True
+
+binaryReader = None
+
+try:
+    binaryReader = BinaryReader(sys.argv[2] if listFiles else sys.argv[1])
+except Exception as e:
+    print("Error: File not found: %s" % sys.argv[2] if listFiles else sys.argv[1])
+    print_usage()
+    exit(1)
+
+
 output_path = pathlib.Path.cwd()
 
-if len(sys.argv) > 2:
+if not listFiles and len(sys.argv) > 2:
     output_path = str(sys.argv[2])
 
 try:
@@ -60,11 +79,14 @@ try:
         name = binaryReader.unpack('<%ds' % name_len).decode('utf-8')
         data = binaryReader.unpack('<%ds' % data_len)
         extracted = zlib.decompress(data)
-        p = pathlib.Path(output_path).joinpath(name)
-        os.makedirs(os.path.dirname(p), exist_ok=True)
-        with p.open('wb') as fh:
-            fh.write(extracted)
-        print("extracted file: %s" % p)
+        if listFiles:
+            print("%s" % name)
+        else:
+            p = pathlib.Path(output_path).joinpath(name)
+            os.makedirs(os.path.dirname(p), exist_ok=True)
+            with p.open('wb') as fh:
+                fh.write(extracted)
+            print("extracted file: %s" % p)
 
 
 except BinaryEOFException:
