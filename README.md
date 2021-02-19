@@ -4,5 +4,6 @@
 
 ```sh
 $ ./unqar.py 
-Usage: ./unqar.py <qar file> [<output path>]
+Usage: unqar [-l] <qar file> [<output path>]
+-l     list files in qar file
 ```
