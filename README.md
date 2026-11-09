@@ -1,5 +1,8 @@
 # Simple QAR (Quartus Archive) unpacker
 
+Supports QAR format versions 1 (Huffman) and 2 (zlib), in both little-endian
+and big-endian archives.
+
 ## Usage
 
 ```sh
